@@ -1,0 +1,27 @@
+services:
+  db:
+    build:
+      context: .
+    container_name: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-db}"
+      MYSQL_USER: "${MYSQL_USER:-liva}"
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    secrets:
+      - db_root_password
+      - db_password
+
+volumes:
+  mariadb_data:
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  db_password:
+    file: ./secrets/db_password.txt
